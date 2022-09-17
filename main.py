@@ -1,5 +1,6 @@
 import pygame
 import pygame.font
+import time
 
 pygame.init()
 width, height = 514, 800
@@ -15,7 +16,7 @@ plankbtntemp = pygame.image.load("plankbtntemp.png").convert()
 akey = pygame.image.load("transparenta.png").convert()
 
 #logic vars
-currPage = "menu1"
+currPage = ""
 scratch = ""
 
 #colour vars
@@ -24,6 +25,16 @@ green = (0, 255, 0)
 cyan = (94, 198, 255)
 grey = (70, 70, 70)
 white = (255, 255, 255)
+orange = (255, 147, 0)
+
+#initAvars
+depdest = "____/____"
+depdestclr = orange
+corte = "__________"
+altncorte = "____/__________"
+fltnbr = "________"
+costi = "---"
+crzfl = "-----/---°"
 
 class Button():
   def __init__(self, x, y, image):
@@ -51,14 +62,75 @@ class fmgc():
   def __init__(self):
     self.rect = pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(82, 48, 353, 329))
 
-  def InitA(self):
+  def inopPages(self):
     font = pygame.font.Font("HoneywellMCDU.ttf", 30)
     text_surface = font.render('PAGE INOP', True, red)
     text_rect = text_surface.get_rect()
     text_rect.topleft = (165,188)
     screen.blit(text_surface, text_rect)
+    
+  def InitA(self):
+    global currPage
+    global depdest
+    global depdestclr
+    global corte
+    global altncorte
+    global fltnbr
+    global costi
+    global crzfl
+    currPage = "initA"
+    scrtchpd.pad("")
+    self.depdest = depdest
+    self.corte = corte
+    font = pygame.font.Font("HoneywellMCDU.ttf", 21)
+    title = font.render("INIT", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (224, 68)
+    screen.blit(title, title_rect)
+    title = font.render("REQUEST*", True, orange)
+    title_rect = title.get_rect()
+    title_rect.topleft = (308, 158)
+    screen.blit(title, title_rect)
+    title = font.render("←→", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (384, 68)
+    screen.blit(title, title_rect)
+    title = font.render(depdest, True, depdestclr)
+    title_rect = title.get_rect()
+    title_rect.topleft = (290, 108)
+    screen.blit(title, title_rect)
+    title = font.render(corte, True, orange)
+    title_rect = title.get_rect()
+    title_rect.topleft = (88, 108)
+    screen.blit(title, title_rect)
+    font = pygame.font.Font("HoneywellMCDU.ttf", 16)
+    title = font.render("CO RTE", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (113, 90)
+    screen.blit(title, title_rect)
+    title = font.render("FROM/TO", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (312, 90)
+    screen.blit(title, title_rect)
+    title = font.render("ALTN/CO RTE", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (93, 135)
+    screen.blit(title, title_rect)
+    title = font.render("FLT NBR", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (93, 181)
+    screen.blit(title, title_rect)
+    title = font.render("INIT", True, orange)
+    title_rect = title.get_rect()
+    title_rect.topleft = (369, 140)
+    screen.blit(title, title_rect)
+    scrtchpd.pad("")
+    
   def StartMenu(self):
-    font = pygame.font.Font("HoneywellMCDU.ttf", 23)
+    global currPage
+    currPage = "menu1"
+    scrtchpd.pad("")
+    font = pygame.font.Font("HoneywellMCDU.ttf", 21)
     title = font.render('A3XX-200', True, white)
     title_rect = title.get_rect()
     title_rect.topleft = (187,61)
@@ -115,13 +187,16 @@ class fmgc():
 
 class Scratchpad():
   def __init__(self):
-    self.rect = pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(78, 347, 358, 29))
+    self.rect = pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(82, 360, 350, 29))
+    blocker = pygame.Surface((350, 29))
+    blocker.fill((0, 0, 0))
+    screen.blit(blocker, self.rect)
 
   def pad(self, inpt):
     global scratch
     act = True
     if act == True:
-      font = pygame.font.Font("HoneywellMCDU.ttf", 23)
+      font = pygame.font.Font("HoneywellMCDU.ttf", 21)
       if inpt == "CLR":
         if scratch == "":
           scratch = "     CLR"
@@ -129,20 +204,43 @@ class Scratchpad():
           scratch = ""
         else:
           scratch = scratch[:-1]
-      elif input == "":
-        text = font.render(scratch, True, white)
-        return 
       else:
         scratch = str(scratch) + inpt
-        
-      screen.fill(backgroundColor)
-      screen.blit(mcduframe, framerect)
+      blocker = pygame.Surface((350, 29))
+      blocker.fill((0, 0, 0))
+      screen.blit(blocker, self.rect)
       text = font.render(scratch, True, white)
       text_rect = text.get_rect()
-      text_rect.topleft = (87, 350)
+      text_rect.topleft = (87, 363)
       screen.blit(text, text_rect)
-      return text
+      return scratch
       
+  def invalidinpt(self):
+    global scratch
+    font = pygame.font.Font("HoneywellMCDU.ttf", 21)
+    text = font.render("INVALID INPUT", True, orange)
+    text_rect = text.get_rect()
+    text_rect.topleft = (87, 363)
+    blocker = pygame.Surface((350, 29))
+    blocker.fill((0, 0, 0))
+    screen.blit(blocker, self.rect)
+    screen.blit(text, text_rect)
+    time.sleep(3)
+    screen.blit(blocker, self.rect)
+    text = font.render(scratch, True, white)
+    text_rect = text.get_rect()
+    text_rect.topleft = (87, 363)
+    screen.blit(text, text_rect)
+
+  def clear(self):
+    global scratch
+    scratch = ""
+    font = pygame.font.Font("HoneywellMCDU.ttf", 21)
+    text = font.render(scratch, True, white)
+    text_rect = text.get_rect()
+    text_rect.topleft = (87, 363)
+    screen.blit(text, text_rect)
+    
 #line select keys
 l1sk = Button(10 , 103, mcdubutton)
 l2sk = Button(10 , 148, mcdubutton)
@@ -185,6 +283,7 @@ k_w =  Button(312 , 692, akey)
 k_x =  Button(366 , 692, akey)
 k_y =  Button(420 , 692, akey)
 k_z =  Button(206 , 740, akey)
+k_slant =  Button(260 , 740, akey)
 k_clr = Button(420 , 740, akey)
 
 
@@ -211,16 +310,27 @@ sarr = fmgc() #arr
 slatrev = fmgc() #inop
 svertrev = fmgc() #alt+spd ctsr only
 sfmgcmnu = fmgc() #fmgcmenu
+sinop = fmgc()
 scrtchpd = Scratchpad()
 
 screen.fill(backgroundColor)
 screen.blit(mcduframe, framerect)
+sfmgcmnu.StartMenu()
 
 while True:
   if l1sk.draw() == True:
-    screen.fill(backgroundColor)
-    screen.blit(mcduframe, framerect)
-    sinita.InitA()
+    if currPage == "initA":
+      if scrtchpd.pad("") == "VHHHRCTP01":
+        corte = "VHHHRCTP01"
+        depdest = "VHHH/RCTP"
+        depdestclr = cyan
+        screen.fill(backgroundColor)
+        screen.blit(mcduframe, framerect)
+        scrtchpd.clear()
+        sinita.InitA()
+      else:
+        scrtchpd.invalidinpt()
+        
   if l2sk.draw() == True:
     screen.fill(backgroundColor)
     screen.blit(mcduframe, framerect)
@@ -234,7 +344,16 @@ while True:
   if l6sk.draw() == True:
     print(pygame.font.get_fonts())
   if r1sk.draw() == True:
-    print(pygame.font.get_fonts())
+    if currPage == "initA":
+      if scrtchpd.pad("") == "VHHH/RCTP":
+        depdest = "VHHH/RCTP"
+        depdestclr = cyan
+        screen.fill(backgroundColor)
+        screen.blit(mcduframe, framerect)
+        print(depdest)
+        sinita.InitA()
+      else:
+        scrtchpd.invalidinpt()
   if r2sk.draw() == True:
     print(pygame.font.get_fonts())
   if r3sk.draw() == True:
@@ -244,15 +363,17 @@ while True:
   if r5sk.draw() == True:
     print(pygame.font.get_fonts())
   if r6sk.draw() == True:
-    print(pygame.font.get_fonts())
+    screen.fill(backgroundColor)
+    screen.blit(mcduframe, framerect)
+    sinop.inopPages()
   if blank.draw() == True:
     screen.fill(backgroundColor)
     screen.blit(mcduframe, framerect)
     sfmgcmnu.StartMenu()
-  if blank.draw() == True:
+  if init.draw() == True:
     screen.fill(backgroundColor)
     screen.blit(mcduframe, framerect)
-    sfmgcmnu.StartMenu()
+    sinita.InitA()
   if k_a.draw() == True:
     scrtchpd.pad("A")
   if k_b.draw() == True:
@@ -305,6 +426,8 @@ while True:
     scrtchpd.pad("X")
   if k_z.draw() == True:
     scrtchpd.pad("Z")
+  if k_slant.draw() == True:
+    scrtchpd.pad("/")
   if k_clr.draw() == True:
     scrtchpd.pad("CLR")
   pygame.display.flip()
