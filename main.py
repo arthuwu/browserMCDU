@@ -8,7 +8,7 @@ backgroundColor = 0, 0, 0
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Airbus MCDU")
 
-mcduframe = pygame.image.load("TEMOMCDU.png").convert()
+mcduframe = pygame.image.load("mcduframe.png").convert()
 framerect = mcduframe.get_rect()
 mcdubutton = pygame.image.load("mcdubutton.png").convert()
 plankbtntemp = pygame.image.load("plankbtntemp.png").convert()
@@ -190,6 +190,7 @@ k_clr = Button(420 , 740, akey)
 
 #page select keys
 blank = Button(370, 406, plankbtntemp)
+init = Button(180, 406, plankbtntemp)
 
 #screens
 sinita = fmgc()
@@ -244,6 +245,10 @@ while True:
     print(pygame.font.get_fonts())
   if r6sk.draw() == True:
     print(pygame.font.get_fonts())
+  if blank.draw() == True:
+    screen.fill(backgroundColor)
+    screen.blit(mcduframe, framerect)
+    sfmgcmnu.StartMenu()
   if blank.draw() == True:
     screen.fill(backgroundColor)
     screen.blit(mcduframe, framerect)
