@@ -7,6 +7,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "getkey"
+version = "0.6.5"
+description = "Read single characters and key-strokes"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "jedi"
 version = "0.18.1"
 description = "An autocompletion tool for Python that can be used for text editors."
@@ -205,10 +213,11 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8.0,<3.9"
-content-hash = "11d05f87d03e07e8321dd036538c8c9b4d802df8d02d9b1f460ecd66a7fa06f2"
+content-hash = "b8a622fe83f28bb53874a08374da10046a34ae53fb8ea2b468b9bf9a2fee34d7"
 
 [metadata.files]
 debugpy = []
+getkey = []
 jedi = []
 packaging = []
 parso = []
