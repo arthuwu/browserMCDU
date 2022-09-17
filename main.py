@@ -13,7 +13,7 @@ mcduframe = pygame.image.load("mcduframe.png").convert()
 framerect = mcduframe.get_rect()
 mcdubutton = pygame.image.load("mcdubutton.png").convert()
 plankbtntemp = pygame.image.load("plankbtntemp.png").convert()
-akey = pygame.image.load("transparenta.png").convert()
+akey = pygame.image.load("akey.png").convert()
 
 #logic vars
 currPage = ""
@@ -239,6 +239,9 @@ class Scratchpad():
     text = font.render(scratch, True, white)
     text_rect = text.get_rect()
     text_rect.topleft = (87, 363)
+    blocker = pygame.Surface((350, 29))
+    blocker.fill((0, 0, 0))
+    screen.blit(blocker, self.rect)
     screen.blit(text, text_rect)
     
 #line select keys
@@ -288,8 +291,13 @@ k_clr = Button(420 , 740, akey)
 
 
 #page select keys
-blank = Button(370, 406, plankbtntemp)
-init = Button(180, 406, plankbtntemp)
+blank = Button(370, 421, plankbtntemp)
+init = Button(245, 421, plankbtntemp)
+data = Button(308, 421, plankbtntemp)
+perf = Button(181, 421, plankbtntemp)
+prog = Button(118, 421, plankbtntemp)
+dir = Button(56, 421, plankbtntemp)
+
 
 #screens
 sinita = fmgc()
@@ -351,6 +359,7 @@ while True:
         screen.fill(backgroundColor)
         screen.blit(mcduframe, framerect)
         print(depdest)
+        scrtchpd.clear()
         sinita.InitA()
       else:
         scrtchpd.invalidinpt()
@@ -374,6 +383,10 @@ while True:
     screen.fill(backgroundColor)
     screen.blit(mcduframe, framerect)
     sinita.InitA()
+  dir.draw()
+  perf.draw()
+  prog.draw()
+  data.draw()
   if k_a.draw() == True:
     scrtchpd.pad("A")
   if k_b.draw() == True:
