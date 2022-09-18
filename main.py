@@ -14,6 +14,7 @@ framerect = mcduframe.get_rect()
 mcdubutton = pygame.image.load("mcdubutton.png").convert()
 plankbtntemp = pygame.image.load("plankbtntemp.png").convert()
 akey = pygame.image.load("akey.png").convert()
+circularbutton = pygame.image.load("circularbutton.png").convert()
 
 #logic vars
 currPage = ""
@@ -31,10 +32,12 @@ orange = (255, 147, 0)
 depdest = "____/____"
 depdestclr = orange
 corte = "__________"
+corteclr = orange
 altncorte = "____/__________"
 fltnbr = "________"
 costi = "---"
 crzfl = "-----/---°"
+initrqvis = True
 
 class Button():
   def __init__(self, x, y, image):
@@ -73,11 +76,13 @@ class fmgc():
     global currPage
     global depdest
     global depdestclr
+    global corteclr
     global corte
     global altncorte
     global fltnbr
     global costi
     global crzfl
+    global initrqvis
     currPage = "initA"
     scrtchpd.pad("")
     self.depdest = depdest
@@ -87,10 +92,6 @@ class fmgc():
     title_rect = title.get_rect()
     title_rect.topleft = (224, 68)
     screen.blit(title, title_rect)
-    title = font.render("REQUEST*", True, orange)
-    title_rect = title.get_rect()
-    title_rect.topleft = (308, 158)
-    screen.blit(title, title_rect)
     title = font.render("←→", True, white)
     title_rect = title.get_rect()
     title_rect.topleft = (384, 68)
@@ -99,7 +100,7 @@ class fmgc():
     title_rect = title.get_rect()
     title_rect.topleft = (290, 108)
     screen.blit(title, title_rect)
-    title = font.render(corte, True, orange)
+    title = font.render(corte, True, corteclr)
     title_rect = title.get_rect()
     title_rect.topleft = (88, 108)
     screen.blit(title, title_rect)
@@ -120,11 +121,18 @@ class fmgc():
     title_rect = title.get_rect()
     title_rect.topleft = (93, 181)
     screen.blit(title, title_rect)
-    title = font.render("INIT", True, orange)
-    title_rect = title.get_rect()
-    title_rect.topleft = (369, 140)
-    screen.blit(title, title_rect)
+    if initrqvis == True:
+      title = font.render("INIT", True, orange)
+      title_rect = title.get_rect()
+      title_rect.topleft = (369, 140)
+      screen.blit(title, title_rect)
+      font = pygame.font.Font("HoneywellMCDU.ttf", 21)
+      title = font.render("REQUEST*", True, orange)
+      title_rect = title.get_rect()
+      title_rect.topleft = (308, 158)
+      screen.blit(title, title_rect)
     scrtchpd.pad("")
+    return
     
   def StartMenu(self):
     global currPage
@@ -195,9 +203,13 @@ class Scratchpad():
   def pad(self, inpt):
     global scratch
     act = True
+   
     if act == True:
       font = pygame.font.Font("HoneywellMCDU.ttf", 21)
-      if inpt == "CLR":
+      if len(scratch) >= 23 and inpt != "CLR":
+        self.invalidinpt("TOO LONG")
+        return
+      elif inpt == "CLR":
         if scratch == "":
           scratch = "     CLR"
         elif scratch == "     CLR":
@@ -215,22 +227,24 @@ class Scratchpad():
       screen.blit(text, text_rect)
       return scratch
       
-  def invalidinpt(self):
+  def invalidinpt(self, text):
     global scratch
     font = pygame.font.Font("HoneywellMCDU.ttf", 21)
-    text = font.render("INVALID INPUT", True, orange)
+    text = font.render(text, True, orange)
     text_rect = text.get_rect()
     text_rect.topleft = (87, 363)
     blocker = pygame.Surface((350, 29))
     blocker.fill((0, 0, 0))
     screen.blit(blocker, self.rect)
     screen.blit(text, text_rect)
-    time.sleep(3)
+    pygame.display.flip()
+    time.sleep(2)
     screen.blit(blocker, self.rect)
     text = font.render(scratch, True, white)
     text_rect = text.get_rect()
     text_rect.topleft = (87, 363)
     screen.blit(text, text_rect)
+    pygame.display.flip()
 
   def clear(self):
     global scratch
@@ -287,8 +301,21 @@ k_x =  Button(366 , 692, akey)
 k_y =  Button(420 , 692, akey)
 k_z =  Button(206 , 740, akey)
 k_slant =  Button(260 , 740, akey)
+k_sp =  Button(312 , 740, akey)
+k_ovfy =  Button(366 , 740, akey)
 k_clr = Button(420 , 740, akey)
-
+k_1 = Button(55, 618, circularbutton)
+k_2 = Button(105, 618, circularbutton)
+k_3 = Button(156, 618, circularbutton)
+k_4 = Button(55, 660, circularbutton)
+k_5 = Button(105, 660, circularbutton)
+k_6 = Button(156, 660, circularbutton)
+k_7 = Button(55, 701, circularbutton)
+k_8 = Button(105, 701, circularbutton)
+k_9 = Button(156, 701, circularbutton)
+k_0 = Button(105, 742, circularbutton)
+k_dot = Button(55, 742, circularbutton)
+k_plusminus = Button(156, 742, circularbutton)
 
 #page select keys
 blank = Button(370, 421, plankbtntemp)
@@ -297,8 +324,18 @@ data = Button(308, 421, plankbtntemp)
 perf = Button(181, 421, plankbtntemp)
 prog = Button(118, 421, plankbtntemp)
 dir = Button(56, 421, plankbtntemp)
-
-
+mcdumenu = Button(370, 459, plankbtntemp)
+secfpln = Button(245, 459, plankbtntemp)
+atccomm = Button(308, 459, plankbtntemp)
+fuelpred = Button(181, 459, plankbtntemp)
+radnav = Button(118, 459, plankbtntemp)
+fpln = Button(56, 459, plankbtntemp)
+blank2 = Button(118, 497, plankbtntemp)
+airport = Button(56, 497, plankbtntemp)
+up = Button(118, 535, plankbtntemp)
+left = Button(56, 535, plankbtntemp)
+down = Button(118, 573, plankbtntemp)
+right = Button(56, 573, plankbtntemp)
 #screens
 sinita = fmgc()
 sinitb = fmgc()
@@ -332,12 +369,23 @@ while True:
         corte = "VHHHRCTP01"
         depdest = "VHHH/RCTP"
         depdestclr = cyan
+        corteclr = cyan
+        initrqvis = False
         screen.fill(backgroundColor)
         screen.blit(mcduframe, framerect)
         scrtchpd.clear()
         sinita.InitA()
+      elif scrtchpd.pad("") == "     CLR":
+        corte = "__________"
+        depdest = "____/____"
+        depdestclr = orange
+        corteclr = orange
+        initrqvis = True
+        scrtchpd.clear()
+        sinita.InitA()
       else:
-        scrtchpd.invalidinpt()
+        scrtchpd.invalidinpt("INVALID CO RTE")
+        time.sleep(2.1)
         
   if l2sk.draw() == True:
     screen.fill(backgroundColor)
@@ -356,13 +404,21 @@ while True:
       if scrtchpd.pad("") == "VHHH/RCTP":
         depdest = "VHHH/RCTP"
         depdestclr = cyan
+        initrqvis = False
         screen.fill(backgroundColor)
         screen.blit(mcduframe, framerect)
         print(depdest)
         scrtchpd.clear()
         sinita.InitA()
+      elif scrtchpd.pad("") == "     CLR":
+        depdest = "____/____"
+        depdestclr = orange
+        initrqvis = True
+        scrtchpd.clear()
+        sinita.InitA()
       else:
-        scrtchpd.invalidinpt()
+        scrtchpd.invalidinpt("INVALID INPUT")
+        time.sleep(2.1)
   if r2sk.draw() == True:
     print(pygame.font.get_fonts())
   if r3sk.draw() == True:
@@ -375,6 +431,7 @@ while True:
     screen.fill(backgroundColor)
     screen.blit(mcduframe, framerect)
     sinop.inopPages()
+  
   if blank.draw() == True:
     screen.fill(backgroundColor)
     screen.blit(mcduframe, framerect)
@@ -387,6 +444,18 @@ while True:
   perf.draw()
   prog.draw()
   data.draw()
+  fpln.draw()
+  atccomm.draw()
+  secfpln.draw()
+  mcdumenu.draw()
+  radnav.draw()
+  fuelpred.draw()
+  blank2.draw()
+  airport.draw()
+  up.draw()
+  down.draw()
+  left.draw()
+  right.draw()
   if k_a.draw() == True:
     scrtchpd.pad("A")
   if k_b.draw() == True:
@@ -441,8 +510,36 @@ while True:
     scrtchpd.pad("Z")
   if k_slant.draw() == True:
     scrtchpd.pad("/")
+  if k_sp.draw() == True:
+    scrtchpd.pad(" ")
+  if k_ovfy.draw() == True:
+    scrtchpd.pad("Δ")
   if k_clr.draw() == True:
     scrtchpd.pad("CLR")
+  if k_1.draw() == True:
+    scrtchpd.pad("1")
+  if k_2.draw() == True:
+    scrtchpd.pad("2")
+  if k_3.draw() == True:
+    scrtchpd.pad("3")
+  if k_4.draw() == True:
+    scrtchpd.pad("4")
+  if k_5.draw() == True:
+    scrtchpd.pad("5")
+  if k_6.draw() == True:
+    scrtchpd.pad("6")
+  if k_7.draw() == True:
+    scrtchpd.pad("7")
+  if k_8.draw() == True:
+    scrtchpd.pad("8")
+  if k_9.draw() == True:
+    scrtchpd.pad("9")
+  if k_0.draw() == True:
+    scrtchpd.pad("0")
+  if k_dot.draw() == True:
+    scrtchpd.pad(".")
+  if k_plusminus.draw() == True:
+    scrtchpd.pad("+")
   pygame.display.flip()
 
 
