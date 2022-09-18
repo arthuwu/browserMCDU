@@ -33,11 +33,27 @@ depdest = "____/____"
 depdestclr = orange
 corte = "__________"
 corteclr = orange
-altncorte = "____/__________"
+fltnbrclr = orange
+altncorte = "----/----------"
 fltnbr = "________"
 costi = "---"
-crzfl = "-----/---°"
+crzalt = 0
+crzfl = "-----"
+ciclr = white
+flclr = white
 initrqvis = True
+tropo = "36090"
+gtemp = "---°"
+
+#init route database
+db = open("cortedb.txt", "r")
+rteList = []
+for l in db:
+  line = l.strip()
+  nextline = line.split()
+  rteList.append(nextline)
+db.close()
+print(rteList)
 
 class Button():
   def __init__(self, x, y, image):
@@ -65,6 +81,10 @@ class fmgc():
   def __init__(self):
     self.rect = pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(82, 48, 353, 329))
 
+  def resetdispl(self):
+    screen.fill(backgroundColor)
+    screen.blit(mcduframe, framerect)
+    
   def inopPages(self):
     font = pygame.font.Font("HoneywellMCDU.ttf", 30)
     text_surface = font.render('PAGE INOP', True, red)
@@ -81,8 +101,14 @@ class fmgc():
     global altncorte
     global fltnbr
     global costi
+    global crzalt
     global crzfl
     global initrqvis
+    global fltnbrclr
+    global ciclr
+    global flclr
+    global tropo
+    global gtemp
     currPage = "initA"
     scrtchpd.pad("")
     self.depdest = depdest
@@ -92,34 +118,90 @@ class fmgc():
     title_rect = title.get_rect()
     title_rect.topleft = (224, 68)
     screen.blit(title, title_rect)
+    title = font.render("WIND/TEMP>", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (281, 243)
+    screen.blit(title, title_rect)
     title = font.render("←→", True, white)
     title_rect = title.get_rect()
-    title_rect.topleft = (384, 68)
+    title_rect.topleft = (395, 65)
     screen.blit(title, title_rect)
     title = font.render(depdest, True, depdestclr)
     title_rect = title.get_rect()
-    title_rect.topleft = (290, 108)
+    title_rect.topleft = (290, 106)
     screen.blit(title, title_rect)
     title = font.render(corte, True, corteclr)
     title_rect = title.get_rect()
-    title_rect.topleft = (88, 108)
+    title_rect.topleft = (91, 106)
     screen.blit(title, title_rect)
+    title = font.render(fltnbr, True, fltnbrclr)
+    title_rect = title.get_rect()
+    title_rect.topleft = (91, 197)
+    screen.blit(title, title_rect)
+    title = font.render(fltnbr, True, fltnbrclr)
+    title_rect = title.get_rect()
+    title_rect.topleft = (91, 198)
+    screen.blit(title, title_rect)
+    title = font.render(costi, True, ciclr)
+    title_rect = title.get_rect()
+    title_rect.topleft = (91, 288)
+    screen.blit(title, title_rect)
+    if crzalt != 0:
+      crzfl = "FL" + str(int(crzalt)/100)
+      title = font.render(crzfl + "/---°", True, flclr)
+      title_rect = title.get_rect()
+      title_rect.topleft = (91, 334)
+      screen.blit(title, title_rect)
+      print(crzfl)
+    else:
+      title = font.render(crzfl + "/---°", True, flclr)
+      title_rect = title.get_rect()
+      title_rect.topleft = (91, 334)
+      screen.blit(title, title_rect)
     font = pygame.font.Font("HoneywellMCDU.ttf", 16)
+    title = font.render(altncorte, True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (90, 155)
+    screen.blit(title, title_rect)
     title = font.render("CO RTE", True, white)
     title_rect = title.get_rect()
-    title_rect.topleft = (113, 90)
+    title_rect.topleft = (113, 86)
     screen.blit(title, title_rect)
     title = font.render("FROM/TO", True, white)
     title_rect = title.get_rect()
-    title_rect.topleft = (312, 90)
+    title_rect.topleft = (312, 86)
     screen.blit(title, title_rect)
     title = font.render("ALTN/CO RTE", True, white)
     title_rect = title.get_rect()
-    title_rect.topleft = (93, 135)
+    title_rect.topleft = (91, 135)
     screen.blit(title, title_rect)
     title = font.render("FLT NBR", True, white)
     title_rect = title.get_rect()
-    title_rect.topleft = (93, 181)
+    title_rect.topleft = (91, 177)
+    screen.blit(title, title_rect)
+    title = font.render("COST INDEX", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (91, 268)
+    screen.blit(title, title_rect)
+    title = font.render("TROPO", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (363, 268)
+    screen.blit(title, title_rect)
+    title = font.render(tropo, True, cyan)
+    title_rect = title.get_rect()
+    title_rect.topleft = (363, 290)
+    screen.blit(title, title_rect)
+    title = font.render("CRZ FL/TEMP", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (91, 314)
+    screen.blit(title, title_rect)
+    title = font.render("GND TEMP", True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (326, 314)
+    screen.blit(title, title_rect)
+    title = font.render(gtemp, True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (376, 337)
     screen.blit(title, title_rect)
     if initrqvis == True:
       title = font.render("INIT", True, orange)
@@ -149,15 +231,15 @@ class fmgc():
     screen.blit(title, title_rect)
     title = font.render('AIRAC 2209', True, cyan)
     title_rect = title.get_rect()
-    title_rect.topleft = (255,156)
+    title_rect.topleft = (255,155)
     screen.blit(title, title_rect)
     title = font.render('AIRAC 2210', True, grey)
     title_rect = title.get_rect()
-    title_rect.topleft = (95,200)
+    title_rect.topleft = (95,198)
     screen.blit(title, title_rect)
     title = font.render('[   ]', True, grey)
     title_rect = title.get_rect()
-    title_rect.topleft = (95,289)
+    title_rect.topleft = (95,288)
     screen.blit(title, title_rect)
     font = pygame.font.Font("HoneywellMCDU.ttf", 16)
     title = font.render('ENG', True, white)
@@ -166,11 +248,11 @@ class fmgc():
     screen.blit(title, title_rect)
     title = font.render('ACTIVE NAV DATA BASE', True, white)
     title_rect = title.get_rect()
-    title_rect.topleft = (114,138)
+    title_rect.topleft = (114,134)
     screen.blit(title, title_rect)
     title = font.render('SECOND NAV DATA BASE', True, white)
     title_rect = title.get_rect()
-    title_rect.topleft = (114,182)
+    title_rect.topleft = (114,179)
     screen.blit(title, title_rect)
     title = font.render('CHG CODE', True, white)
     title_rect = title.get_rect()
@@ -178,7 +260,7 @@ class fmgc():
     screen.blit(title, title_rect)
     title = font.render('IDLE/PERF', True, white)
     title_rect = title.get_rect()
-    title_rect.topleft = (94, 319)
+    title_rect.topleft = (94, 314)
     screen.blit(title, title_rect)
     title = font.render('+0.0/+0.0', True, green)
     title_rect = title.get_rect()
@@ -356,89 +438,32 @@ slatrev = fmgc() #inop
 svertrev = fmgc() #alt+spd ctsr only
 sfmgcmnu = fmgc() #fmgcmenu
 sinop = fmgc()
+reset = fmgc()
 scrtchpd = Scratchpad()
+
 
 screen.fill(backgroundColor)
 screen.blit(mcduframe, framerect)
 sfmgcmnu.StartMenu()
 
 while True:
-  if l1sk.draw() == True:
-    if currPage == "initA":
-      if scrtchpd.pad("") == "VHHHRCTP01":
-        corte = "VHHHRCTP01"
-        depdest = "VHHH/RCTP"
-        depdestclr = cyan
-        corteclr = cyan
-        initrqvis = False
-        screen.fill(backgroundColor)
-        screen.blit(mcduframe, framerect)
-        scrtchpd.clear()
-        sinita.InitA()
-      elif scrtchpd.pad("") == "     CLR":
-        corte = "__________"
-        depdest = "____/____"
-        depdestclr = orange
-        corteclr = orange
-        initrqvis = True
-        scrtchpd.clear()
-        sinita.InitA()
-      else:
-        scrtchpd.invalidinpt("INVALID CO RTE")
-        time.sleep(2.1)
-        
-  if l2sk.draw() == True:
-    screen.fill(backgroundColor)
-    screen.blit(mcduframe, framerect)
-    scrtchpd.pad("")
-  if l3sk.draw() == True:
-    print(pygame.font.get_fonts())
-  if l4sk.draw() == True:
-    print(pygame.font.get_fonts())
-  if l5sk.draw() == True:
-    print(pygame.font.get_fonts())
-  if l6sk.draw() == True:
-    print(pygame.font.get_fonts())
-  if r1sk.draw() == True:
-    if currPage == "initA":
-      if scrtchpd.pad("") == "VHHH/RCTP":
-        depdest = "VHHH/RCTP"
-        depdestclr = cyan
-        initrqvis = False
-        screen.fill(backgroundColor)
-        screen.blit(mcduframe, framerect)
-        print(depdest)
-        scrtchpd.clear()
-        sinita.InitA()
-      elif scrtchpd.pad("") == "     CLR":
-        depdest = "____/____"
-        depdestclr = orange
-        initrqvis = True
-        scrtchpd.clear()
-        sinita.InitA()
-      else:
-        scrtchpd.invalidinpt("INVALID INPUT")
-        time.sleep(2.1)
-  if r2sk.draw() == True:
-    print(pygame.font.get_fonts())
-  if r3sk.draw() == True:
-    print(pygame.font.get_fonts())
-  if r4sk.draw() == True:
-    print(pygame.font.get_fonts())
-  if r5sk.draw() == True:
-    print(pygame.font.get_fonts())
-  if r6sk.draw() == True:
-    screen.fill(backgroundColor)
-    screen.blit(mcduframe, framerect)
-    sinop.inopPages()
-  
+  l1sk.draw()
+  l2sk.draw()
+  l3sk.draw()
+  l4sk.draw()
+  l5sk.draw()
+  l6sk.draw()
+  r1sk.draw()
+  r2sk.draw()
+  r3sk.draw()
+  r4sk.draw()
+  r5sk.draw()
+  r6sk.draw()
   if blank.draw() == True:
-    screen.fill(backgroundColor)
-    screen.blit(mcduframe, framerect)
+    reset.resetdispl()
     sfmgcmnu.StartMenu()
   if init.draw() == True:
-    screen.fill(backgroundColor)
-    screen.blit(mcduframe, framerect)
+    reset.resetdispl()
     sinita.InitA()
   dir.draw()
   perf.draw()
@@ -540,6 +565,145 @@ while True:
     scrtchpd.pad(".")
   if k_plusminus.draw() == True:
     scrtchpd.pad("+")
+
+  #softkeys - INIT A
+  if currPage == "initA":
+    if l1sk.draw() == True:
+      if scrtchpd.pad("") == "VHHHRCTP01":
+        corte = "VHHHRCTP01"
+        depdest = "VHHH/RCTP"
+        depdestclr = cyan
+        corteclr = cyan
+        initrqvis = False
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
+      elif scrtchpd.pad("") == "     CLR":
+        corte = "__________"
+        depdest = "____/____"
+        depdestclr = orange
+        corteclr = orange
+        initrqvis = True
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
+      else:
+        scrtchpd.invalidinpt("INVALID CO RTE")
+        time.sleep(2.1)         
+    if l2sk.draw() == True:
+      if scrtchpd.pad("") == "RCKH/RCTPRCKH01":
+        altncorte = "RCKH/RCTPRCKH01"
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
+      elif scrtchpd.pad("") == "     CLR":
+        depdest = "____/__________"
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
+      else:
+        scrtchpd.invalidinpt("INVALID ALTN")
+        time.sleep(2.1)      
+    if l3sk.draw() == True:
+      if scrtchpd.pad("").isalnum() == True:
+        fltnbr = scrtchpd.pad("")
+        fltnbrclr = cyan
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
+      elif scrtchpd.pad("") == "     CLR":
+        fltnbr = "________"
+        fltnbrclr = orange
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
+      else:
+        scrtchpd.invalidinpt("INVALID INPUT")
+        time.sleep(2.1)      
+    l4sk.draw()
+    if l5sk.draw() == True:
+      if scrtchpd.pad("").isdecimal() == True and int(scrtchpd.pad("")) <= 150:
+        costi = scrtchpd.pad("")
+        ciclr = cyan
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
+      else:
+        scrtchpd.invalidinpt("INVALID COST INDEX")
+        time.sleep(2.1)      
+    if l6sk.draw() == True:
+      if scrtchpd.pad("").isdecimal() == True:
+        if int(scrtchpd.pad("")) >= 2000 and int(scrtchpd.pad("")) % 100 == 0 and int(scrtchpd.pad("")) <= 39500:
+          crzalt = int(scrtchpd.pad(""))   
+          flclr = cyan
+          reset.resetdispl()
+          scrtchpd.clear()
+          sinita.InitA()
+        elif len(scrtchpd.pad("")) <= 3 and int(scrtchpd.pad("")) in range(20, 391):
+          crzalt = int(scrtchpd.pad("")) * 100
+          flclr = cyan
+          reset.resetdispl()
+          scrtchpd.clear()
+          sinita.InitA()
+        else:
+          scrtchpd.invalidinpt("INVALID CRZ ALT")
+          time.sleep(2.1)
+      elif len(scrtchpd.pad("")) == 5 and scrtchpd.pad("").isalnum() == True:
+        if scrtchpd.pad("")[0] + scrtchpd.pad("")[1] == "FL": 
+          crzalt = int(scrtchpd.pad("")[2] + scrtchpd.pad("")[3] + scrtchpd.pad("")[4])*100
+          flclr = cyan
+          reset.resetdispl()
+          scrtchpd.clear()
+          sinita.InitA()
+        else:
+          scrtchpd.invalidinpt("INVALID CRZ ALT")
+          time.sleep(2.1)
+      elif len(scrtchpd.pad("")) == 4 and scrtchpd.pad("").isalnum() == True:
+        if scrtchpd.pad("")[0] + scrtchpd.pad("")[1] == "FL": 
+          crzalt = int(scrtchpd.pad("")[2] + scrtchpd.pad("")[3])*100
+          flclr = cyan
+          reset.resetdispl()
+          scrtchpd.clear()
+          sinita.InitA()
+        else:
+          scrtchpd.invalidinpt("INVALID CRZ ALT")
+          time.sleep(2.1)
+      else:
+        scrtchpd.invalidinpt("INVALID CRZ ALT")
+        time.sleep(2.1)  
+        
+    if r1sk.draw() == True:
+      if scrtchpd.pad("") == "VHHH/RCTP":
+        depdest = "VHHH/RCTP"
+        depdestclr = cyan
+        initrqvis = False
+        reset.resetdispl()
+        print(depdest)
+        scrtchpd.clear()
+        sinita.InitA()
+      elif scrtchpd.pad("") == "     CLR":
+        depdest = "____/____"
+        depdestclr = orange
+        reset.resetdispl()
+        initrqvis = True
+        scrtchpd.clear()
+        sinita.InitA()
+      else:
+        scrtchpd.invalidinpt("INVALID INPUT")
+        time.sleep(2.1)
+    if r2sk.draw() == True:
+      print(pygame.font.get_fonts())
+    if r3sk.draw() == True:
+      print(pygame.font.get_fonts())
+    if r4sk.draw() == True:
+      print(pygame.font.get_fonts())
+    if r5sk.draw() == True:
+      print(pygame.font.get_fonts())
+    if r6sk.draw() == True:
+      screen.fill(backgroundColor)
+      screen.blit(mcduframe, framerect)
+      sinop.inopPages()
+  
   pygame.display.flip()
 
 
