@@ -9,10 +9,12 @@ backgroundColor = 0, 0, 0
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Airbus MCDU")
 
+#texture init
 mcduframe = pygame.image.load("mcduframe.png").convert()
 framerect = mcduframe.get_rect()
-mcdubutton = pygame.image.load("mcdubutton.png").convert()
-plankbtntemp = pygame.image.load("plankbtntemp.png").convert()
+#buttons
+mcdubutton = pygame.image.load("mcdubutton.png").convert() #line select keys
+plankbtntemp = pygame.image.load("plankbtntemp.png").convert() 
 akey = pygame.image.load("akey.png").convert()
 circularbutton = pygame.image.load("circularbutton.png").convert()
 
@@ -146,8 +148,13 @@ class fmgc():
     title_rect = title.get_rect()
     title_rect.topleft = (91, 288)
     screen.blit(title, title_rect)
-    if crzalt != 0:
-      crzfl = "FL" + str(int(crzalt)/100)
+    if crzalt == "-----":
+      title = font.render(crzalt + "/---°", True, flclr)
+      title_rect = title.get_rect()
+      title_rect.topleft = (91, 334)
+      screen.blit(title, title_rect)
+    elif crzalt != 0:
+      crzfl = "FL" + str(int(int(crzalt)/100)).zfill(3)
       title = font.render(crzfl + "/---°", True, flclr)
       title_rect = title.get_rect()
       title_rect.topleft = (91, 334)
@@ -620,10 +627,18 @@ while True:
       else:
         scrtchpd.invalidinpt("INVALID INPUT")
         time.sleep(2.1)      
-    l4sk.draw()
+    if l4sk.draw() == True:
+      reset.resetdispl()
+      sinop.inopPages()
     if l5sk.draw() == True:
       if scrtchpd.pad("").isdecimal() == True and int(scrtchpd.pad("")) <= 150:
         costi = scrtchpd.pad("")
+        ciclr = cyan
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
+      elif scrtchpd.pad("") == "     CLR":
+        costi = "---"
         ciclr = cyan
         reset.resetdispl()
         scrtchpd.clear()
@@ -668,6 +683,12 @@ while True:
         else:
           scrtchpd.invalidinpt("INVALID CRZ ALT")
           time.sleep(2.1)
+      elif scrtchpd.pad("") == "     CLR":
+        crzalt = "-----"
+        flclr = white
+        reset.resetdispl()
+        scrtchpd.clear()
+        sinita.InitA()
       else:
         scrtchpd.invalidinpt("INVALID CRZ ALT")
         time.sleep(2.1)  
@@ -692,18 +713,20 @@ while True:
         scrtchpd.invalidinpt("INVALID INPUT")
         time.sleep(2.1)
     if r2sk.draw() == True:
-      print(pygame.font.get_fonts())
-    if r3sk.draw() == True:
-      print(pygame.font.get_fonts())
-    if r4sk.draw() == True:
-      print(pygame.font.get_fonts())
-    if r5sk.draw() == True:
-      print(pygame.font.get_fonts())
-    if r6sk.draw() == True:
-      screen.fill(backgroundColor)
-      screen.blit(mcduframe, framerect)
+      reset.resetdispl()
       sinop.inopPages()
-  
+    if r3sk.draw() == True:
+      reset.resetdispl()
+      sinop.inopPages()
+    if r4sk.draw() == True:
+      reset.resetdispl()
+      sinop.inopPages()
+    if r5sk.draw() == True:
+      reset.resetdispl()
+      sinop.inopPages()
+    if r6sk.draw() == True:
+      reset.resetdispl()
+      sinop.inopPages()
   pygame.display.flip()
 
 
