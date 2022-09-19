@@ -1,6 +1,7 @@
 import pygame
 import pygame.font
 import time
+import string
 
 pygame.init()
 width, height = 514, 800
@@ -10,17 +11,29 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Airbus MCDU")
 
 #texture init
-mcduframe = pygame.image.load("mcduframe.png").convert()
+mcduframe = pygame.image.load("textures/mcduframe.png").convert()
 framerect = mcduframe.get_rect()
 #buttons
-mcdubutton = pygame.image.load("mcdubutton.png").convert() #line select keys
-plankbtntemp = pygame.image.load("plankbtntemp.png").convert() 
-akey = pygame.image.load("akey.png").convert()
-circularbutton = pygame.image.load("circularbutton.png").convert()
+#line select key
+mcdubutton = pygame.image.load("textures/mcdubutton.png").convert()
+#page select key
+blankbtn = pygame.image.load("textures/pageselect/blankbtn.png").convert() 
+initbtn = pygame.image.load("textures/pageselect/initbtn.png").convert() 
+inopbtn = pygame.image.load("textures/pageselect/inopbtn.png").convert() 
+#keypad
+for i in list(string.ascii_lowercase):
+  globals()[i + "key"] = pygame.image.load("textures/keypad/" + i + "key.png").convert()
+spkey = pygame.image.load("textures/keypad/spkey.png").convert()
+clrkey = pygame.image.load("textures/keypad/clrkey.png").convert()
+slashkey = pygame.image.load("textures/keypad/slashkey.png").convert()
+ovfykey = pygame.image.load("textures/keypad/ovfykey.png").convert()
+#numpad
+circularbutton = pygame.image.load("textures/numpad/circularbutton.png").convert()
 
 #logic vars
 currPage = ""
 scratch = ""
+scratchpadact = True
 
 #colour vars
 red = (255, 0, 0)
@@ -291,30 +304,41 @@ class Scratchpad():
 
   def pad(self, inpt):
     global scratch
-    act = True
-   
-    if act == True:
-      font = pygame.font.Font("HoneywellMCDU.ttf", 21)
+    global scratchpadact
+    font = pygame.font.Font("HoneywellMCDU.ttf", 21)
+    if inpt == "CLR":
+      if scratch == "":
+        scratch = "     CLR"
+        scratchpadact = False
+      elif scratch == "     CLR":
+        scratch = ""
+        scratchpadact = True
+      else:
+        scratch = scratch[:-1]
+    elif scratchpadact == True:
       if len(scratch) >= 23 and inpt != "CLR":
         self.invalidinpt("TOO LONG")
         return
-      elif inpt == "CLR":
-        if scratch == "":
-          scratch = "     CLR"
-        elif scratch == "     CLR":
-          scratch = ""
+      elif inpt == "+":
+        if len(scratch) != 0:
+          if scratch[-1] == "+":
+            scratch = scratch[:-1] + "-"
+          elif scratch[-1] == "-":
+            scratch = scratch[:-1] + "+"
+          else:
+            scratch = str(scratch) + inpt
         else:
-          scratch = scratch[:-1]
+          scratch = str(scratch) + inpt
       else:
         scratch = str(scratch) + inpt
-      blocker = pygame.Surface((350, 29))
-      blocker.fill((0, 0, 0))
-      screen.blit(blocker, self.rect)
-      text = font.render(scratch, True, white)
-      text_rect = text.get_rect()
-      text_rect.topleft = (87, 363)
-      screen.blit(text, text_rect)
-      return scratch
+    blocker = pygame.Surface((350, 29))
+    blocker.fill((0, 0, 0))
+    screen.blit(blocker, self.rect)
+    text = font.render(scratch, True, white)
+    text_rect = text.get_rect()
+    text_rect.topleft = (87, 363)
+    screen.blit(text, text_rect)
+    return scratch
       
   def invalidinpt(self, text):
     global scratch
@@ -364,35 +388,35 @@ r6sk = Button(470 , 330, mcdubutton)
 
 #keyboard
 k_a =  Button(206 , 500, akey)
-k_b =  Button(260 , 500, akey)
-k_c =  Button(312 , 500, akey)
-k_d =  Button(366 , 500, akey)
-k_e =  Button(420 , 500, akey)
-k_f =  Button(206 , 548, akey)
-k_g =  Button(260 , 548, akey)
-k_h =  Button(312 , 548, akey)
-k_i =  Button(366 , 548, akey)
-k_j =  Button(420 , 548, akey)
-k_k =  Button(206 , 596, akey)
-k_l =  Button(260 , 596, akey)
-k_m =  Button(312 , 596, akey)
-k_n =  Button(366 , 596, akey)
-k_o =  Button(420 , 596, akey)
-k_p =  Button(206 , 644, akey)
-k_q =  Button(260 , 644, akey)
-k_r =  Button(312 , 644, akey)
-k_s =  Button(366 , 644, akey)
-k_t =  Button(420 , 644, akey)
-k_u =  Button(206 , 692, akey)
-k_v =  Button(260 , 692, akey)
-k_w =  Button(312 , 692, akey)
-k_x =  Button(366 , 692, akey)
-k_y =  Button(420 , 692, akey)
-k_z =  Button(206 , 740, akey)
-k_slant =  Button(260 , 740, akey)
-k_sp =  Button(312 , 740, akey)
-k_ovfy =  Button(366 , 740, akey)
-k_clr = Button(420 , 740, akey)
+k_b =  Button(260 , 500, bkey)
+k_c =  Button(312 , 500, ckey)
+k_d =  Button(366 , 500, dkey)
+k_e =  Button(420 , 500, ekey)
+k_f =  Button(206 , 548, fkey)
+k_g =  Button(260 , 548, gkey)
+k_h =  Button(312 , 548, hkey)
+k_i =  Button(366 , 548, ikey)
+k_j =  Button(420 , 548, jkey)
+k_k =  Button(206 , 596, kkey)
+k_l =  Button(260 , 596, lkey)
+k_m =  Button(312 , 596, mkey)
+k_n =  Button(366 , 596, nkey)
+k_o =  Button(420 , 596, okey)
+k_p =  Button(206 , 644, pkey)
+k_q =  Button(260 , 644, qkey)
+k_r =  Button(312 , 644, rkey)
+k_s =  Button(366 , 644, skey)
+k_t =  Button(420 , 644, tkey)
+k_u =  Button(206 , 692, ukey)
+k_v =  Button(260 , 692, vkey)
+k_w =  Button(312 , 692, wkey)
+k_x =  Button(366 , 692, ykey)
+k_y =  Button(420 , 692, xkey)
+k_z =  Button(206 , 740, zkey)
+k_slant =  Button(260 , 740, slashkey)
+k_sp =  Button(312 , 740, spkey)
+k_ovfy =  Button(366 , 740, ovfykey)
+k_clr = Button(420 , 740, clrkey)
 k_1 = Button(55, 618, circularbutton)
 k_2 = Button(105, 618, circularbutton)
 k_3 = Button(156, 618, circularbutton)
@@ -407,24 +431,24 @@ k_dot = Button(55, 742, circularbutton)
 k_plusminus = Button(156, 742, circularbutton)
 
 #page select keys
-blank = Button(370, 421, plankbtntemp)
-init = Button(245, 421, plankbtntemp)
-data = Button(308, 421, plankbtntemp)
-perf = Button(181, 421, plankbtntemp)
-prog = Button(118, 421, plankbtntemp)
-dir = Button(56, 421, plankbtntemp)
-mcdumenu = Button(370, 459, plankbtntemp)
-secfpln = Button(245, 459, plankbtntemp)
-atccomm = Button(308, 459, plankbtntemp)
-fuelpred = Button(181, 459, plankbtntemp)
-radnav = Button(118, 459, plankbtntemp)
-fpln = Button(56, 459, plankbtntemp)
-blank2 = Button(118, 497, plankbtntemp)
-airport = Button(56, 497, plankbtntemp)
-up = Button(118, 535, plankbtntemp)
-left = Button(56, 535, plankbtntemp)
-down = Button(118, 573, plankbtntemp)
-right = Button(56, 573, plankbtntemp)
+blank = Button(370, 421, blankbtn)
+init = Button(245, 421, initbtn)
+data = Button(308, 421, inopbtn)
+perf = Button(181, 421, inopbtn)
+prog = Button(118, 421, inopbtn)
+dir = Button(56, 421, inopbtn)
+mcdumenu = Button(370, 459, inopbtn)
+secfpln = Button(245, 459, inopbtn)
+atccomm = Button(308, 459, inopbtn)
+fuelpred = Button(181, 459, inopbtn)
+radnav = Button(118, 459, inopbtn)
+fpln = Button(56, 459, inopbtn)
+blank2 = Button(118, 497, inopbtn)
+airport = Button(56, 497, inopbtn)
+up = Button(118, 535, inopbtn)
+left = Button(56, 535, inopbtn)
+down = Button(118, 573, inopbtn)
+right = Button(56, 573, inopbtn)
 #screens
 sinita = fmgc()
 sinitb = fmgc()
