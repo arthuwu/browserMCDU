@@ -19,6 +19,7 @@ mcdubutton = pygame.image.load("textures/mcdubutton.png").convert()
 #page select key
 blankbtn = pygame.image.load("textures/pageselect/blankbtn.png").convert() 
 initbtn = pygame.image.load("textures/pageselect/initbtn.png").convert() 
+mcdumenu = pygame.image.load("textures/pageselect/mcdumenu.png").convert() 
 inopbtn = pygame.image.load("textures/pageselect/inopbtn.png").convert() 
 #keypad
 for i in list(string.ascii_lowercase):
@@ -28,8 +29,10 @@ clrkey = pygame.image.load("textures/keypad/clrkey.png").convert()
 slashkey = pygame.image.load("textures/keypad/slashkey.png").convert()
 ovfykey = pygame.image.load("textures/keypad/ovfykey.png").convert()
 #numpad
-circularbutton = pygame.image.load("textures/numpad/circularbutton.png").convert()
-
+for i in range(0,10):
+  globals()["key" + str(i)] = pygame.image.load("textures/numpad/" + str(i) + "key.png").convert()
+keydot =  pygame.image.load("textures/numpad/dotkey.png").convert()
+keyplus =  pygame.image.load("textures/numpad/pluskey.png").convert()
 #logic vars
 currPage = ""
 scratch = ""
@@ -236,9 +239,9 @@ class fmgc():
     scrtchpd.pad("")
     return
     
-  def StartMenu(self):
+  def acftdata(self):
     global currPage
-    currPage = "menu1"
+    currPage = "acftdata"
     scrtchpd.pad("")
     font = pygame.font.Font("HoneywellMCDU.ttf", 21)
     title = font.render('A3XX-200', True, white)
@@ -284,7 +287,7 @@ class fmgc():
     screen.blit(title, title_rect)
     title = font.render('+0.0/+0.0', True, green)
     title_rect = title.get_rect()
-    title_rect.topleft = (86, 339)
+    title_rect.topleft = (89, 336)
     screen.blit(title, title_rect)
     title = font.render('MADE WITH', True, white)
     title_rect = title.get_rect()
@@ -293,6 +296,15 @@ class fmgc():
     title = font.render('PYGAME ON REPLIT', True, white)
     title_rect = title.get_rect()
     title_rect.topleft = (238, 344)
+    screen.blit(title, title_rect)
+  def mcdumenu(self):
+    global currPage
+    currPage = "mcdumenu"
+    scrtchpd.pad("")
+    font = pygame.font.Font("HoneywellMCDU.ttf", 21)
+    title = font.render('MCDU MENU', True, white)
+    title_rect = title.get_rect()
+    title_rect.topleft = (187,61)
     screen.blit(title, title_rect)
 
 class Scratchpad():
@@ -417,18 +429,18 @@ k_slant =  Button(260 , 740, slashkey)
 k_sp =  Button(312 , 740, spkey)
 k_ovfy =  Button(366 , 740, ovfykey)
 k_clr = Button(420 , 740, clrkey)
-k_1 = Button(55, 618, circularbutton)
-k_2 = Button(105, 618, circularbutton)
-k_3 = Button(156, 618, circularbutton)
-k_4 = Button(55, 660, circularbutton)
-k_5 = Button(105, 660, circularbutton)
-k_6 = Button(156, 660, circularbutton)
-k_7 = Button(55, 701, circularbutton)
-k_8 = Button(105, 701, circularbutton)
-k_9 = Button(156, 701, circularbutton)
-k_0 = Button(105, 742, circularbutton)
-k_dot = Button(55, 742, circularbutton)
-k_plusminus = Button(156, 742, circularbutton)
+k_1 = Button(55, 618, key1)
+k_2 = Button(105, 618, key2)
+k_3 = Button(156, 618, key3)
+k_4 = Button(55, 660, key4)
+k_5 = Button(105, 660, key5)
+k_6 = Button(156, 660, key6)
+k_7 = Button(55, 701, key7)
+k_8 = Button(105, 701, key8)
+k_9 = Button(156, 701, key9)
+k_0 = Button(105, 742, key0)
+k_dot = Button(55, 742, keydot)
+k_plusminus = Button(156, 742, keyplus)
 
 #page select keys
 blank = Button(370, 421, blankbtn)
@@ -437,13 +449,13 @@ data = Button(308, 421, inopbtn)
 perf = Button(181, 421, inopbtn)
 prog = Button(118, 421, inopbtn)
 dir = Button(56, 421, inopbtn)
-mcdumenu = Button(370, 459, inopbtn)
+mcdumenu = Button(370, 459, mcdumenu)
 secfpln = Button(245, 459, inopbtn)
 atccomm = Button(308, 459, inopbtn)
 fuelpred = Button(181, 459, inopbtn)
 radnav = Button(118, 459, inopbtn)
 fpln = Button(56, 459, inopbtn)
-blank2 = Button(118, 497, inopbtn)
+blank2 = Button(118, 497, blankbtn)
 airport = Button(56, 497, inopbtn)
 up = Button(118, 535, inopbtn)
 left = Button(56, 535, inopbtn)
@@ -467,7 +479,7 @@ sdep = fmgc() #dep
 sarr = fmgc() #arr
 slatrev = fmgc() #inop
 svertrev = fmgc() #alt+spd ctsr only
-sfmgcmnu = fmgc() #fmgcmenu
+sacftmnu = fmgc() #fmgcmenu
 sinop = fmgc()
 reset = fmgc()
 scrtchpd = Scratchpad()
@@ -475,9 +487,98 @@ scrtchpd = Scratchpad()
 
 screen.fill(backgroundColor)
 screen.blit(mcduframe, framerect)
-sfmgcmnu.StartMenu()
+sacftmnu.acftdata()
 
+#temp implementation of keyboard input
+events = pygame.event.get()
+clock = pygame.time.Clock()
+    
 while True:
+  clock.tick(60)
+  for event in pygame.event.get():
+    if event.type == pygame.KEYDOWN:
+      if event.key == pygame.K_a:
+        scrtchpd.pad("A")
+      elif event.key == pygame.K_b:
+        scrtchpd.pad("B")
+      elif event.key == pygame.K_c:
+        scrtchpd.pad("C")
+      elif event.key == pygame.K_d:
+        scrtchpd.pad("D")
+      elif event.key == pygame.K_e:
+        scrtchpd.pad("E")
+      elif event.key == pygame.K_f:
+        scrtchpd.pad("F")
+      elif event.key == pygame.K_g:
+        scrtchpd.pad("G")
+      elif event.key == pygame.K_h:
+        scrtchpd.pad("H")
+      elif event.key == pygame.K_i:
+        scrtchpd.pad("I")
+      elif event.key == pygame.K_j:
+        scrtchpd.pad("J")
+      elif event.key == pygame.K_k:
+        scrtchpd.pad("K")
+      elif event.key == pygame.K_l:
+        scrtchpd.pad("L")
+      elif event.key == pygame.K_m:
+        scrtchpd.pad("M")
+      elif event.key == pygame.K_n:
+        scrtchpd.pad("N")
+      elif event.key == pygame.K_o:
+        scrtchpd.pad("O")
+      elif event.key == pygame.K_p:
+        scrtchpd.pad("P")
+      elif event.key == pygame.K_q:
+        scrtchpd.pad("Q")
+      elif event.key == pygame.K_r:
+        scrtchpd.pad("R")
+      elif event.key == pygame.K_s:
+        scrtchpd.pad("S")
+      elif event.key == pygame.K_t:
+        scrtchpd.pad("T")
+      elif event.key == pygame.K_u:
+        scrtchpd.pad("U")
+      elif event.key == pygame.K_v:
+        scrtchpd.pad("V")
+      elif event.key == pygame.K_w:
+        scrtchpd.pad("W")
+      elif event.key == pygame.K_x:
+        scrtchpd.pad("X")
+      elif event.key == pygame.K_y:
+        scrtchpd.pad("Y")
+      elif event.key == pygame.K_z:
+        scrtchpd.pad("Z")
+      elif event.key == pygame.K_BACKSPACE:
+        scrtchpd.pad("CLR")
+      elif event.key == pygame.K_SPACE:
+        scrtchpd.pad(" ")
+      elif event.unicode == "+" or event.unicode == "-":
+        scrtchpd.pad("+")
+      elif event.key == pygame.K_SLASH:
+        scrtchpd.pad("/")
+      elif event.key == pygame.K_0:
+        scrtchpd.pad("0")
+      elif event.key == pygame.K_1:
+        scrtchpd.pad("1")
+      elif event.key == pygame.K_2:
+        scrtchpd.pad("2")
+      elif event.key == pygame.K_3:
+        scrtchpd.pad("3")
+      elif event.key == pygame.K_4:
+        scrtchpd.pad("4")
+      elif event.key == pygame.K_5:
+        scrtchpd.pad("5")
+      elif event.key == pygame.K_6:
+        scrtchpd.pad("6")
+      elif event.key == pygame.K_7:
+        scrtchpd.pad("7")
+      elif event.key == pygame.K_8:
+        scrtchpd.pad("8")
+      elif event.key == pygame.K_9:
+        scrtchpd.pad("9")
+      elif event.key == pygame.K_PERIOD:
+        scrtchpd.pad(".")
   l1sk.draw()
   l2sk.draw()
   l3sk.draw()
@@ -492,10 +593,13 @@ while True:
   r6sk.draw()
   if blank.draw() == True:
     reset.resetdispl()
-    sfmgcmnu.StartMenu()
+    sacftmnu.acftdata()
   if init.draw() == True:
     reset.resetdispl()
     sinita.InitA()
+  if mcdumenu.draw() == True:
+    reset.resetdispl()
+    smcdumenu.mcdumenu()
   dir.draw()
   perf.draw()
   prog.draw()
@@ -503,7 +607,6 @@ while True:
   fpln.draw()
   atccomm.draw()
   secfpln.draw()
-  mcdumenu.draw()
   radnav.draw()
   fuelpred.draw()
   blank2.draw()
